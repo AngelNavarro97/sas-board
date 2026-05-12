@@ -691,14 +691,15 @@ function toggleAl(){document.getElementById('alertPanel').classList.toggle('open
 //  LOGIN
 // ═══════════════════════════════════════════════
 function fillLoginSel(){
-  // login now uses email input, no select needed
+  // login uses email input
 }
 async function doLogin(){
-  const uid2=document.getElementById('loginUser').value;
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
   const pass=document.getElementById('loginPass').value;
   const err=document.getElementById('loginErr');
-  const user=Object.values(users).find(u=>u.id===uid2&&u.pass===pass&&u.active);
-  if(!user){err.textContent='Usuario o contraseña incorrectos';return;}
+  if(!email||!pass){err.textContent='Introduce tu email y contraseña';return;}
+  const user=Object.values(users).find(u=>u.email.toLowerCase()===email&&u.pass===pass&&u.active);
+  if(!user){err.textContent='Email o contraseña incorrectos';return;}
   CU=user;err.textContent='';
   hide('loginScreen');
   document.getElementById('app').style.display='flex';
@@ -715,13 +716,38 @@ async function doLogin(){
   updateNavBadges();
   sw('board',document.querySelector('.nb'));
 }
-document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 function doLogout(){
   CU=null;
   document.getElementById('app').style.display='none';
+  document.getElementById('loginEmail').value='';
   document.getElementById('loginPass').value='';
   show('loginScreen');
   document.getElementById('alertPanel').classList.remove('open');
+}
+function openChangePass(){
+  document.getElementById('cpEmail').value='';
+  document.getElementById('cpNewPass').value='';
+  document.getElementById('cpConfPass').value='';
+  const err=document.getElementById('cpErr');
+  err.textContent='';err.style.color='var(--red)';
+  op('mChangePass');
+}
+async function saveChangePass(){
+  const email=document.getElementById('cpEmail').value.trim().toLowerCase();
+  const newPass=document.getElementById('cpNewPass').value;
+  const confPass=document.getElementById('cpConfPass').value;
+  const err=document.getElementById('cpErr');
+  err.style.color='var(--red)';
+  if(!email||!newPass||!confPass){err.textContent='Rellena todos los campos';return;}
+  if(newPass.length<6){err.textContent='La contraseña debe tener al menos 6 caracteres';return;}
+  if(newPass!==confPass){err.textContent='Las contraseñas no coinciden';return;}
+  const user=Object.values(users).find(u=>u.email.toLowerCase()===email&&u.active);
+  if(!user){err.textContent='Email no encontrado';return;}
+  await sbPatch('users',user.id,{pass:newPass});
+  await loadAll();
+  err.style.color='var(--green)';
+  err.textContent='✅ Contraseña actualizada correctamente';
+  setTimeout(()=>{cl('mChangePass');},2000);
 }
 
 // ═══════════════════════════════════════════════
