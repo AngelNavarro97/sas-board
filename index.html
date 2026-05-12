@@ -783,7 +783,9 @@ async function doLogin(){
   av.textContent=ini(user);av.style.background=user.color+'22';av.style.color=user.color;
   document.getElementById('topName').textContent=user.name+' '+user.surname;
   const isAdmin=user.id===ADMIN_ID;
-  // Desktop nav (hidden on mobile via CSS, JS controls admin-only visibility)
+  // Desktop nav — always show Tablero + Eventos, admin-only for the rest
+  document.getElementById('navBoard').style.display='';
+  document.getElementById('navEvents').style.display='';
   document.getElementById('navAppr').style.display=isAdmin?'':'none';
   document.getElementById('navNotif').style.display=isAdmin?'':'none';
   document.getElementById('navUsers').style.display=isAdmin?'':'none';
@@ -797,7 +799,7 @@ async function doLogin(){
   document.getElementById('mnHistory').style.display=isAdmin?'':'none';
   await log('login',`${user.name} ${user.surname} inició sesión`);
   updateNavBadges();
-  sw('board',document.querySelector('.nb'));
+  sw('board',document.getElementById('navBoard'));
 }
 function doLogout(){
   CU=null;
@@ -892,7 +894,7 @@ function renderBoard(){
   const wrap=document.getElementById('boardWrap');
   const ts=visibleTasks();
   const isAdmin=CU.id===ADMIN_ID;
-  document.getElementById('btnAt').textContent=isAdmin?'+ Nueva tarea':'+ Proponer tarea';
+  document.getElementById('btnAt').style.display=isAdmin?'':'none';
   renderPriBar();
   wrap.innerHTML='';
   const pending=Object.values(tasks).filter(t=>t.status==='pending_approval'&&t.created_by===CU.id);
@@ -940,6 +942,7 @@ function selPri(v){
 //  TASK MODAL
 // ═══════════════════════════════════════════════
 function openAddTask(status='todo'){
+  if(CU.id!==ADMIN_ID)return;
   ET=null;const isAdmin=CU.id===ADMIN_ID;
   document.getElementById('mTaskT').textContent=isAdmin?'NUEVA TAREA':'PROPONER TAREA';
   document.getElementById('btnSaveTask').textContent=isAdmin?'Guardar tarea':'Enviar a aprobación';
@@ -964,6 +967,7 @@ function fillAss(sel){
   });
 }
 async function saveTask(){
+  if(CU.id!==ADMIN_ID)return;
   const name=document.getElementById('tName').value.trim();
   if(!name)return alert('El título es obligatorio');
   const now=Date.now();const isAdmin=CU.id===ADMIN_ID;
@@ -1045,11 +1049,9 @@ function openDetail(id){
     }
     foot+=`<button class="btn-p sm" onclick="editTask('${id}')">✏️ Editar</button>`;
     foot+=`<button class="btn-d" onclick="deleteTask('${id}')">🗑</button>`;
-  } else {
-    if(canEdit&&t.status!=='done')foot+=`<button class="btn-p sm" onclick="editTask('${id}')">✏️ Editar</button>`;
-  }
-  if((isAssignee||isAdmin)&&t.status!=='done'&&t.status!=='pending_approval'&&t.status!=='rejected'){
-    foot+=`<button class="btn-p green sm" onclick="openComplete('${id}')">✅ Completar</button>`;
+    if(t.status!=='done'&&t.status!=='pending_approval'&&t.status!=='rejected'){
+      foot+=`<button class="btn-p green sm" onclick="openComplete('${id}')">✅ Completar</button>`;
+    }
   }
   foot+=`<button class="bcan" onclick="cl('mDetail')">Cerrar</button>`;
   document.getElementById('dFoot').innerHTML=foot;
@@ -1067,6 +1069,7 @@ async function addComment(tid){
   inp.value='';openDetail(tid);
 }
 function editTask(id){
+  if(CU.id!==ADMIN_ID)return;
   const t=tasks[id];ET=id;const isAdmin=CU.id===ADMIN_ID;
   document.getElementById('mTaskT').textContent='EDITAR TAREA';
   document.getElementById('btnSaveTask').textContent='Guardar cambios';
@@ -1082,12 +1085,14 @@ function editTask(id){
   cl('mDetail');op('mTask');
 }
 async function approveTask(id){
+  if(CU.id!==ADMIN_ID)return;
   const t=tasks[id];
   await sbPatch('tasks',id,{status:'todo',updated_at:Date.now(),rejection_note:null});
   await log('approve',`Tarea aprobada: ${t.title}`,id);
   await loadAll();cl('mDetail');
 }
 async function rejectTask(id){
+  if(CU.id!==ADMIN_ID)return;
   const t=tasks[id];
   const reason=prompt('Motivo del rechazo (opcional):');
   await sbPatch('tasks',id,{status:'rejected',updated_at:Date.now(),rejection_note:reason||null});
@@ -1095,6 +1100,7 @@ async function rejectTask(id){
   await loadAll();cl('mDetail');
 }
 async function deleteTask(id){
+  if(CU.id!==ADMIN_ID)return;
   if(!confirm('¿Eliminar esta tarea?'))return;
   const t=tasks[id];
   await sbDelete('tasks',id);
@@ -1106,6 +1112,7 @@ async function deleteTask(id){
 //  COMPLETE TASK
 // ═══════════════════════════════════════════════
 function openComplete(id){
+  if(CU.id!==ADMIN_ID)return;
   document.getElementById('cTaskId').value=id;
   ['cComment','cLink','cLinkName'].forEach(i=>document.getElementById(i).value='');
   document.getElementById('cLinkType').value='link';
