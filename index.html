@@ -236,6 +236,8 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
 }
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:10px}
+/* mobileNav siempre oculto por defecto, solo visible en móvil via JS */
+#mobileNav{display:none}
 
 /* ═══════════════════════════════════════════════
    RESPONSIVE MOBILE
@@ -252,7 +254,8 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
   #navHistory,#navAppr,#navNotif,#navUsers,#navAdmin,#navBoard,#navEvents,#topSep{display:none !important}
   #mobileNav{display:none;position:fixed;top:52px;left:0;right:0;background:var(--s1);border-bottom:1px solid var(--b1);z-index:999;flex-direction:column;padding:8px;gap:2px}
   #mobileNav.open{display:flex}
-  #mobileNav .nb{display:flex !important;padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
+  #mnBoard,#mnEvents{display:flex !important;padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
+  #mobileNav .nb{padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
   .uname{display:none}
   .uchip{padding:4px 6px}
   .tr{gap:5px}
