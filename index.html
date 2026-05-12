@@ -244,17 +244,64 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
 /* mobileNav siempre oculto por defecto, solo visible en móvil via JS */
 #mobileNav{display:none}
 
-/* NOTES APP */
-.notes-folder{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s;font-size:12.5px}
-.notes-folder:hover{background:var(--s2)}
-.notes-row{padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s;margin-bottom:2px}
-.notes-row:hover{background:var(--s2)}
-.notes-row.active{background:rgba(0,212,200,.1);border-left:3px solid var(--cyan);padding-left:7px}
+/* ── NOTES APP ── */
+.notes-app{display:flex;flex:1;overflow:hidden;height:100%}
+.notes-sidebar{width:260px;flex-shrink:0;border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;background:var(--s1)}
+.notes-sidebar-header{padding:14px 14px 8px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b1)}
+.notes-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--b1);background:var(--s2);color:var(--txt2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.notes-icon-btn:hover{background:var(--s3);color:var(--txt)}
+.notes-icon-btn-primary{background:var(--cyan);color:#040a09;border-color:var(--cyan);font-weight:700}
+.notes-icon-btn-primary:hover{background:var(--cyan2)}
+.notes-list{flex:1;overflow-y:auto;padding:6px}
+.notes-folder-row{display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .15s;margin-bottom:1px}
+.notes-folder-row:hover{background:var(--s2)}
+.notes-folder-label{font-size:12.5px;font-weight:600;flex:1;color:var(--txt2)}
+.notes-folder-count{font-size:10px;color:var(--txt3);background:var(--s2);padding:1px 6px;border-radius:8px}
+.notes-folder-acts{display:flex;gap:2px;opacity:0;transition:opacity .15s}
+.notes-folder-row:hover .notes-folder-acts{opacity:1}
+.notes-folder-acts button{width:22px;height:22px;border-radius:5px;border:none;background:transparent;cursor:pointer;font-size:10px;color:var(--txt3)}
+.notes-folder-acts button:hover{background:var(--s3);color:var(--txt)}
+.notes-note-row{padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;margin-bottom:3px;border:1px solid transparent}
+.notes-note-row:hover{background:var(--s2);border-color:var(--b1)}
+.notes-note-row.active{background:rgba(0,212,200,.08);border-color:rgba(0,212,200,.25)}
+.notes-note-title{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt)}
+.notes-note-preview{font-size:11px;color:var(--txt3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.notes-note-date{font-size:10px;color:var(--txt3);margin-top:4px;font-family:'DM Mono',monospace}
+.notes-editor{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.notes-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--txt3);padding:20px;text-align:center}
 #notesEditorInner{display:none;flex:1;flex-direction:column;overflow:hidden}
-#noteContentArea{flex:1;min-height:0}
+.notes-toolbar{padding:12px 16px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;background:var(--s1)}
+.notes-title-input{flex:1;background:transparent;border:none;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;outline:none;min-width:0}
+.notes-title-input::placeholder{color:var(--txt3)}
+.notes-meta-bar{padding:7px 16px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:8px;background:var(--s1)}
+.notes-folder-sel{background:transparent;border:none;color:var(--txt3);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;outline:none;max-width:160px}
+.notes-folder-sel option{background:var(--s2)}
+.notes-saved-msg{font-size:11px;color:var(--txt3);white-space:nowrap}
+.notes-content{flex:1;resize:none;border:none;background:transparent;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.85;padding:20px;outline:none;min-height:0}
+.notes-attach-bar{border-top:1px solid var(--b1);background:var(--s1);flex-shrink:0}
+.notes-attach-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.notes-attach-header:hover{background:var(--s2)}
+.notes-attach-add{cursor:pointer;font-size:11px;color:var(--cyan);padding:3px 8px;border-radius:5px;border:1px solid rgba(0,212,200,.3)}
+.notes-attach-panel{padding:0 16px 10px;display:none}
+.notes-attach-panel.open{display:block}
+.notes-attach-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.notes-attach-item{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:7px 10px;max-width:200px;min-width:140px}
+.notes-attach-thumb{width:30px;height:30px;object-fit:cover;border-radius:5px;flex-shrink:0}
+.notes-attach-icon{font-size:20px;width:30px;text-align:center;flex-shrink:0}
+.notes-attach-name{font-size:11.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.notes-attach-size{font-size:10px;color:var(--txt3)}
+.notes-ctx-menu{position:fixed;bottom:0;left:0;right:0;background:var(--s1);border-top:1px solid var(--b2);border-radius:16px 16px 0 0;z-index:499;padding:8px;display:flex;flex-direction:column;gap:2px;animation:slideUp .2s ease}
+.notes-ctx-menu button{padding:14px 18px;border:none;background:transparent;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;border-radius:10px;text-align:left;transition:background .15s}
+.notes-ctx-menu button:hover{background:var(--s2)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+/* Mobile notes */
 @media(max-width:768px){
-  #notesSidebar{width:100%;border-right:none;border-bottom:1px solid var(--b1);max-height:200px}
-  #notesApp{flex-direction:column}
+  .notes-sidebar{width:100%;border-right:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;transform:translateX(0);transition:transform .25s ease}
+  .notes-sidebar.hidden{transform:translateX(-100%)}
+  .notes-editor{position:absolute;top:0;left:0;right:0;bottom:0;transform:translateX(100%);transition:transform .25s ease}
+  .notes-editor.active{transform:translateX(0)}
+  .notes-app{position:relative;overflow:hidden}
+  #noteBackBtn{display:flex !important}
 }
 
 /* ═══════════════════════════════════════════════
@@ -440,51 +487,86 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
         </div>
       </div>
     </div>
-    <div class="view" id="viewNotes">
-      <!-- NOTES APP LAYOUT -->
-      <div id="notesApp" style="display:flex;gap:0;flex:1;overflow:hidden;border:1px solid var(--b1);border-radius:14px;background:var(--s1)">
-        <!-- SIDEBAR -->
-        <div id="notesSidebar" style="width:220px;flex-shrink:0;border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden">
-          <div style="padding:12px;border-bottom:1px solid var(--b1);display:flex;gap:6px">
-            <button class="btn-p sm" style="flex:1" onclick="openNewNote()">+ Nota</button>
-            <button class="btn-p g sm" onclick="openNewFolder()">📁</button>
+    <div class="view" id="viewNotes" style="padding:0;overflow:hidden">
+      <div id="notesApp" class="notes-app">
+
+        <!-- PANEL IZQUIERDO: Lista de notas -->
+        <div id="notesSidebar" class="notes-sidebar">
+          <!-- Header sidebar -->
+          <div class="notes-sidebar-header">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px">NOTAS</div>
+            <div style="display:flex;gap:6px">
+              <button class="notes-icon-btn" onclick="openNewFolder()" title="Nueva carpeta">📁</button>
+              <button class="notes-icon-btn notes-icon-btn-primary" onclick="openNewNote()" title="Nueva nota">＋</button>
+            </div>
           </div>
-          <div id="notesList" style="flex:1;overflow-y:auto;padding:8px"></div>
+          <!-- Search -->
+          <div style="padding:8px 12px">
+            <input id="notesSearch" class="fi" placeholder="🔍 Buscar notas..." style="font-size:13px" oninput="filterNotes(this.value)"/>
+          </div>
+          <!-- List -->
+          <div id="notesList" class="notes-list"></div>
         </div>
-        <!-- EDITOR -->
-        <div id="notesEditor" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-          <div id="notesEmpty" style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--txt3)">
-            <div style="font-size:48px;opacity:.2">📝</div>
-            <div style="font-size:13px">Selecciona una nota o crea una nueva</div>
+
+        <!-- PANEL DERECHO: Editor -->
+        <div id="notesEditor" class="notes-editor">
+          <!-- Estado vacío -->
+          <div id="notesEmpty" class="notes-empty">
+            <div style="font-size:56px;opacity:.15">📝</div>
+            <div style="font-size:14px;font-weight:500;margin-top:8px">Sin nota seleccionada</div>
+            <div style="font-size:12px;color:var(--txt3);margin-top:4px">Elige una nota o crea una nueva</div>
+            <button class="btn-p" style="margin-top:16px" onclick="openNewNote()">+ Nueva nota</button>
           </div>
-          <div id="notesEditorInner" style="display:none;flex:1;flex-direction:column;overflow:hidden">
-            <div style="padding:14px 18px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px">
-              <input id="noteTitleInput" class="fi" placeholder="Título de la nota" style="flex:1;font-size:15px;font-weight:600;background:transparent;border:none;padding:0;border-bottom:1px solid var(--b1);border-radius:0"/>
-              <div style="display:flex;gap:6px;flex-shrink:0">
-                <button class="btn-p sm" onclick="saveCurrentNote()" title="Guardar (Ctrl+S)">💾</button>
-                <button class="btn-p sm" onclick="duplicateNote()" title="Duplicar">⧉</button>
-                <button class="btn-d" onclick="deleteCurrentNote()" title="Eliminar">🗑</button>
+
+          <!-- Editor activo -->
+          <div id="notesEditorInner">
+            <!-- Toolbar -->
+            <div class="notes-toolbar">
+              <button class="notes-icon-btn" id="noteBackBtn" onclick="notesGoBack()" title="Volver" style="display:none">‹</button>
+              <input id="noteTitleInput" placeholder="Título" class="notes-title-input"/>
+              <div style="display:flex;gap:5px;flex-shrink:0;align-items:center">
+                <span id="noteSavedMsg" class="notes-saved-msg"></span>
+                <button class="notes-icon-btn" onclick="saveCurrentNote()" title="Guardar">💾</button>
+                <button class="notes-icon-btn" onclick="showNoteMenu()" title="Más opciones">⋯</button>
               </div>
             </div>
-            <div style="padding:8px 18px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <span style="font-size:11px;color:var(--txt3)">Carpeta:</span>
-              <select id="noteFolderSelect" class="fs" style="font-size:11px;padding:3px 7px;width:auto" onchange="changeNoteFolder()"></select>
-              <span id="noteSavedMsg" style="font-size:11px;color:var(--txt3);margin-left:auto"></span>
+            <!-- Note meta -->
+            <div class="notes-meta-bar">
+              <span style="font-size:11px;color:var(--txt3)">📁</span>
+              <select id="noteFolderSelect" class="notes-folder-sel" onchange="changeNoteFolder()"></select>
+              <span id="noteMetaDate" style="font-size:11px;color:var(--txt3);margin-left:auto"></span>
             </div>
-            <textarea id="noteContentArea" class="fta" placeholder="Escribe aquí..." style="flex:1;resize:none;border:none;border-radius:0;background:transparent;font-size:14px;line-height:1.8;padding:18px;min-height:0"></textarea>
-            <!-- ATTACHMENTS -->
-            <div style="border-top:1px solid var(--b1);padding:10px 18px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--txt3)">Archivos adjuntos</span>
-                <label style="cursor:pointer;font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:4px">
-                  <input type="file" id="attachInput" multiple style="display:none" onchange="uploadAttachments(this)"/> + Añadir archivo
-                </label>
+            <!-- Content -->
+            <textarea id="noteContentArea" class="notes-content" placeholder="Empieza a escribir..."></textarea>
+            <!-- Attachments (colapsable) -->
+            <div id="notesAttachBar" class="notes-attach-bar">
+              <div class="notes-attach-header" onclick="toggleAttachPanel()">
+                <span style="font-size:12px;color:var(--txt2)">📎 Archivos adjuntos <span id="attachCount" style="color:var(--txt3)"></span></span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <label class="notes-attach-add">
+                    <input type="file" id="attachInput" multiple style="display:none" onchange="uploadAttachments(this)"/>
+                    + Añadir
+                  </label>
+                  <span id="attachToggleIcon" style="color:var(--txt3);font-size:12px">▲</span>
+                </div>
               </div>
-              <div id="attachList" style="display:flex;flex-wrap:wrap;gap:7px"></div>
+              <div id="attachPanel" class="notes-attach-panel">
+                <div id="attachList" class="notes-attach-list"></div>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
+
+      <!-- Note context menu -->
+      <div id="noteMenu" class="notes-ctx-menu" style="display:none">
+        <button onclick="duplicateNote();hideNoteMenu()">⧉ Duplicar nota</button>
+        <button onclick="moveNoteToFolder();hideNoteMenu()">📁 Mover a carpeta</button>
+        <button onclick="hideNoteMenu();deleteCurrentNote()" style="color:var(--red)">🗑 Eliminar nota</button>
+        <button onclick="hideNoteMenu()">✕ Cancelar</button>
+      </div>
+      <div id="noteMenuOverlay" style="display:none;position:fixed;inset:0;z-index:498" onclick="hideNoteMenu()"></div>
     </div>
   </div>
 </div>
@@ -681,9 +763,18 @@ async function initApp(){
   try {
     await loadAll();
     hide('connectScreen');
+    // Restore session if exists
+    const saved = sessionStorage.getItem('sas_session');
+    if(saved){
+      try{
+        const {id, pass} = JSON.parse(saved);
+        const user = Object.values(users).find(u=>u.id===id&&u.pass===pass&&u.active);
+        if(user){ applySession(user); pollInterval=setInterval(loadAll,5000); return; }
+      }catch(e){}
+      sessionStorage.removeItem('sas_session');
+    }
     show('loginScreen');
     fillLoginSel();
-    // Poll every 5 seconds for real-time feel
     pollInterval = setInterval(loadAll, 5000);
   } catch(e){
     hide('connectScreen');
@@ -839,6 +930,33 @@ function toggleAl(){document.getElementById('alertPanel').classList.toggle('open
 function fillLoginSel(){
   // login uses email input
 }
+// Enter key on login fields
+['loginEmail','loginPass'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+});
+
+function applySession(user){
+  CU=user;
+  hide('loginScreen');
+  document.getElementById('app').style.display='flex';
+  const av=document.getElementById('topAv');
+  av.textContent=ini(user);av.style.background=user.color+'22';av.style.color=user.color;
+  document.getElementById('topName').textContent=user.name+' '+user.surname;
+  const isAdmin=user.id===ADMIN_ID;
+  document.getElementById('navAppr').style.display=isAdmin?'':'none';
+  document.getElementById('navNotif').style.display=isAdmin?'':'none';
+  document.getElementById('navUsers').style.display=isAdmin?'':'none';
+  document.getElementById('navAdmin').style.display=isAdmin?'':'none';
+  document.getElementById('navHistory').style.display=isAdmin?'':'none';
+  document.getElementById('mnAppr').style.display=isAdmin?'':'none';
+  document.getElementById('mnNotif').style.display=isAdmin?'':'none';
+  document.getElementById('mnUsers').style.display=isAdmin?'':'none';
+  document.getElementById('mnAdmin').style.display=isAdmin?'':'none';
+  document.getElementById('mnHistory').style.display=isAdmin?'':'none';
+  updateNavBadges();
+  sw('board',document.getElementById('navBoard'));
+}
+
 async function doLogin(){
   const email=document.getElementById('loginEmail').value.trim().toLowerCase();
   const pass=document.getElementById('loginPass').value;
@@ -846,35 +964,21 @@ async function doLogin(){
   if(!email||!pass){err.textContent='Introduce tu email y contraseña';return;}
   const user=Object.values(users).find(u=>u.email.toLowerCase()===email&&u.pass===pass&&u.active);
   if(!user){err.textContent='Email o contraseña incorrectos';return;}
-  CU=user;err.textContent='';
-  hide('loginScreen');
-  document.getElementById('app').style.display='flex';
-  const av=document.getElementById('topAv');
-  av.textContent=ini(user);av.style.background=user.color+'22';av.style.color=user.color;
-  document.getElementById('topName').textContent=user.name+' '+user.surname;
-  const isAdmin=user.id===ADMIN_ID;
-  // Desktop nav — admin-only buttons visibility
-  document.getElementById('navAppr').style.display=isAdmin?'':'none';
-  document.getElementById('navNotif').style.display=isAdmin?'':'none';
-  document.getElementById('navUsers').style.display=isAdmin?'':'none';
-  document.getElementById('navAdmin').style.display=isAdmin?'':'none';
-  document.getElementById('navHistory').style.display=isAdmin?'':'none';
-  // Mobile nav: always show Tablero+Eventos, show admin-only if admin
-  document.getElementById('mnAppr').style.display=isAdmin?'':'none';
-  document.getElementById('mnNotif').style.display=isAdmin?'':'none';
-  document.getElementById('mnUsers').style.display=isAdmin?'':'none';
-  document.getElementById('mnAdmin').style.display=isAdmin?'':'none';
-  document.getElementById('mnHistory').style.display=isAdmin?'':'none';
+  err.textContent='';
+  // Save session so refresh doesn't log out
+  sessionStorage.setItem('sas_session', JSON.stringify({id:user.id,pass:user.pass}));
+  applySession(user);
   await log('login',`${user.name} ${user.surname} inició sesión`);
-  updateNavBadges();
-  sw('board',document.getElementById('navBoard'));
 }
 function doLogout(){
+  sessionStorage.removeItem('sas_session');
   CU=null;
-  nFolders=[];nNotes=[];nAttachments=[];nCurrentNote=null;nCurrentFolder=null;
+  nFolders=[];nNotes=[];nAttachments=[];nCurrentNote=null;nCurrentFolder=null;nSearchQuery='';
   document.getElementById('notesEmpty').style.display='flex';
   document.getElementById('notesEditorInner').style.display='none';
   document.getElementById('notesList').innerHTML='';
+  document.getElementById('notesSidebar').classList.remove('hidden');
+  document.getElementById('notesEditor').classList.remove('active');
   document.getElementById('app').style.display='none';
   document.getElementById('loginEmail').value='';
   document.getElementById('loginPass').value='';
@@ -1400,7 +1504,7 @@ function renderAdmin(){
 // ═══════════════════════════════════════════════
 //  NOTES APP
 // ═══════════════════════════════════════════════
-let nFolders=[], nNotes=[], nAttachments=[], nCurrentNote=null, nCurrentFolder=null;
+let nFolders=[], nNotes=[], nAttachments=[], nCurrentNote=null, nCurrentFolder=null, nSearchQuery='';
 
 // ── API helpers ──
 async function sbNoteGet(table, params=''){
@@ -1412,73 +1516,78 @@ async function sbNotePost(table, body){
   return r.json();
 }
 async function sbNotePatch(table, col, val, body){
-  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${col}=eq.${val}`, {method:'PATCH', headers:HEADERS, body:JSON.stringify(body)});
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${col}=eq.${encodeURIComponent(val)}`, {method:'PATCH', headers:HEADERS, body:JSON.stringify(body)});
   return r.json();
 }
 async function sbNoteDelete(table, col, val){
-  await fetch(`${SUPA_URL}/rest/v1/${table}?${col}=eq.${val}`, {method:'DELETE', headers:{...HEADERS,'Prefer':''}});
+  await fetch(`${SUPA_URL}/rest/v1/${table}?${col}=eq.${encodeURIComponent(val)}`, {method:'DELETE', headers:{...HEADERS,'Prefer':''}});
 }
 
-// ── Load all notes data ──
+// ── Load all ──
 async function loadNotes(){
-  if(!CU)return;
+  if(!CU) return;
   nFolders = await sbNoteGet('note_folders',`user_id=eq.${CU.id}&order=created_at.asc`) || [];
   nNotes   = await sbNoteGet('note_items',  `user_id=eq.${CU.id}&order=updated_at.desc`) || [];
   renderNotesSidebar();
 }
 
 // ── Sidebar ──
+function filterNotes(q){ nSearchQuery=q.toLowerCase(); renderNotesSidebar(); }
+
 function renderNotesSidebar(){
   const el = document.getElementById('notesList');
+  const q = nSearchQuery;
+  let filtered = q ? nNotes.filter(n=>(n.title||'').toLowerCase().includes(q)||(n.content||'').toLowerCase().includes(q)) : nNotes;
   let html = '';
-  // Notas sin carpeta
-  const uncategorized = nNotes.filter(n=>!n.folder_id);
-  if(uncategorized.length){
-    html += `<div style="padding:6px 8px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3)">Sin carpeta</div>`;
-    uncategorized.forEach(n=>{ html += noteRowHTML(n); });
+
+  if(q){
+    // Search results flat
+    if(!filtered.length) html='<div style="padding:20px;text-align:center;font-size:12px;color:var(--txt3)">Sin resultados</div>';
+    else filtered.forEach(n=>{ html+=noteRowHTML(n); });
+  } else {
+    // Uncategorized
+    const uncat = nNotes.filter(n=>!n.folder_id);
+    if(uncat.length){
+      html+=`<div style="padding:7px 10px 3px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3)">Sin carpeta</div>`;
+      uncat.forEach(n=>{ html+=noteRowHTML(n); });
+    }
+    // Folders
+    nFolders.forEach(f=>{
+      const fNotes = nNotes.filter(n=>n.folder_id===f.id);
+      const isOpen = nCurrentFolder===f.id;
+      html+=`<div class="notes-folder-row" onclick="toggleFolder('${f.id}')">
+        <span style="font-size:14px">${isOpen?'📂':'📁'}</span>
+        <span class="notes-folder-label">${f.name}</span>
+        <span class="notes-folder-count">${fNotes.length}</span>
+        <div class="notes-folder-acts">
+          <button onclick="event.stopPropagation();renameFolderPrompt('${f.id}')" title="Renombrar">✏️</button>
+          <button onclick="event.stopPropagation();deleteFolderConfirm('${f.id}')" style="color:var(--red)" title="Eliminar">🗑</button>
+        </div>
+      </div>
+      <div id="fnotes_${f.id}" style="display:${isOpen?'block':'none'};padding-left:8px">
+        ${fNotes.length ? fNotes.map(n=>noteRowHTML(n)).join('') : '<div style="padding:8px 10px;font-size:11px;color:var(--txt3)">Carpeta vacía</div>'}
+      </div>`;
+    });
+    if(!nFolders.length&&!uncat.length) html='<div style="padding:30px 16px;text-align:center;font-size:12px;color:var(--txt3)">Sin notas.<br>Pulsa + para crear una.</div>';
   }
-  // Carpetas
-  nFolders.forEach(f=>{
-    const fNotes = nNotes.filter(n=>n.folder_id===f.id);
-    html += `<div class="notes-folder" onclick="toggleFolder('${f.id}')">
-      <span id="ficon_${f.id}" style="font-size:12px">📁</span>
-      <span style="flex:1;font-size:12.5px;font-weight:500">${f.name}</span>
-      <span style="font-size:10px;color:var(--txt3)">${fNotes.length}</span>
-      <button class="ibtn" style="width:22px;height:22px;font-size:10px" onclick="event.stopPropagation();renameFolderPrompt('${f.id}')" title="Renombrar">✏️</button>
-      <button class="ibtn del" style="width:22px;height:22px;font-size:10px" onclick="event.stopPropagation();deleteFolderConfirm('${f.id}')" title="Eliminar carpeta">🗑</button>
-    </div>
-    <div id="fnotes_${f.id}" style="display:none;padding-left:10px">
-      ${fNotes.map(n=>noteRowHTML(n)).join('')}
-    </div>`;
-  });
-  if(!html) html = '<div style="padding:16px 8px;font-size:12px;color:var(--txt3);text-align:center">Sin notas. ¡Crea una!</div>';
   el.innerHTML = html;
-  // Restore open folders
-  nFolders.forEach(f=>{
-    const el2 = document.getElementById(`fnotes_${f.id}`);
-    if(el2 && nCurrentFolder===f.id) el2.style.display='block';
-  });
 }
 
 function noteRowHTML(n){
-  const active = nCurrentNote && nCurrentNote.id===n.id;
-  const preview = n.content ? n.content.split('\n').join(' ').substring(0,40) : 'Sin contenido';
+  const active = nCurrentNote&&nCurrentNote.id===n.id;
+  const preview = (n.content||'').substring(0,55).trim()||'Sin contenido';
   const d = new Date(n.updated_at);
-  const dateStr = d.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
-  return `<div class="notes-row ${active?'active':''}" onclick="openNote('${n.id}')">
-    <div style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n.title||'Sin título'}</div>
-    <div style="font-size:10.5px;color:var(--txt3);margin-top:2px;display:flex;gap:6px"><span>${dateStr}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${preview}</span></div>
+  const dateStr = d.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+  return `<div class="notes-note-row${active?' active':''}" onclick="openNote('${n.id}')">
+    <div class="notes-note-title">${n.title||'Sin título'}</div>
+    <div class="notes-note-preview">${preview}</div>
+    <div class="notes-note-date">${dateStr}</div>
   </div>`;
 }
 
 function toggleFolder(fid){
-  const el = document.getElementById(`fnotes_${fid}`);
-  const ico = document.getElementById(`ficon_${fid}`);
-  if(!el) return;
-  const open = el.style.display==='block';
-  el.style.display = open?'none':'block';
-  ico.textContent = open?'📁':'📂';
-  nCurrentFolder = open?null:fid;
+  nCurrentFolder = nCurrentFolder===fid ? null : fid;
+  renderNotesSidebar();
 }
 
 // ── Open note ──
@@ -1490,29 +1599,54 @@ async function openNote(nid){
   document.getElementById('notesEditorInner').style.display='flex';
   document.getElementById('noteTitleInput').value = nCurrentNote.title||'';
   document.getElementById('noteContentArea').value = nCurrentNote.content||'';
+  const d = new Date(nCurrentNote.updated_at);
+  document.getElementById('noteMetaDate').textContent = d.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
   // folder select
   const sel = document.getElementById('noteFolderSelect');
   sel.innerHTML = '<option value="">Sin carpeta</option>' + nFolders.map(f=>`<option value="${f.id}"${nCurrentNote.folder_id===f.id?' selected':''}>${f.name}</option>`).join('');
   renderAttachList();
   renderNotesSidebar();
   document.getElementById('noteSavedMsg').textContent='';
+  // Mobile: slide to editor
+  if(window.innerWidth<=768){
+    document.getElementById('notesSidebar').classList.add('hidden');
+    document.getElementById('notesEditor').classList.add('active');
+  }
+}
+
+function notesGoBack(){
+  document.getElementById('notesSidebar').classList.remove('hidden');
+  document.getElementById('notesEditor').classList.remove('active');
+}
+
+// ── Attachments ──
+function toggleAttachPanel(){
+  const panel = document.getElementById('attachPanel');
+  const icon = document.getElementById('attachToggleIcon');
+  const open = panel.classList.toggle('open');
+  icon.textContent = open ? '▼' : '▲';
 }
 
 function renderAttachList(){
   const el = document.getElementById('attachList');
-  if(!nAttachments.length){ el.innerHTML='<span style="font-size:11px;color:var(--txt3)">Sin archivos</span>'; return; }
+  const count = document.getElementById('attachCount');
+  count.textContent = nAttachments.length ? `(${nAttachments.length})` : '';
+  if(!nAttachments.length){
+    el.innerHTML='<span style="font-size:11px;color:var(--txt3)">Sin archivos adjuntos</span>';
+    return;
+  }
   el.innerHTML = nAttachments.map(a=>{
-    const isImg = a.type && a.type.startsWith('image/');
-    return `<div style="position:relative;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:7px;max-width:180px">
-      ${isImg?`<img src="${a.url}" style="width:28px;height:28px;object-fit:cover;border-radius:4px"/>`:
-      `<div style="font-size:18px">${fileIcon(a.type)}</div>`}
-      <div style="flex:1;overflow:hidden">
-        <div style="font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.name}</div>
-        <div style="font-size:10px;color:var(--txt3)">${fmtSize(a.size)}</div>
+    const isImg = a.type&&a.type.startsWith('image/');
+    return `<div class="notes-attach-item">
+      ${isImg?`<img src="${a.url}" class="notes-attach-thumb"/>`:
+      `<div class="notes-attach-icon">${fileIcon(a.type)}</div>`}
+      <div style="flex:1;min-width:0">
+        <div class="notes-attach-name">${a.name}</div>
+        <div class="notes-attach-size">${fmtSize(a.size)}</div>
       </div>
-      <div style="display:flex;gap:3px">
-        <a href="${a.url}" target="_blank" style="font-size:10px;color:var(--cyan);text-decoration:none" title="Abrir">↗</a>
-        <button onclick="deleteAttachment('${a.id}')" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--red)" title="Eliminar">✕</button>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <a href="${a.url}" target="_blank" style="font-size:11px;color:var(--cyan);text-decoration:none;text-align:center" title="Abrir">↗</a>
+        <button onclick="deleteAttachment('${a.id}')" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--red);padding:0" title="Eliminar">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -1522,129 +1656,158 @@ function fileIcon(type){
   if(!type) return '📎';
   if(type.startsWith('image/')) return '🖼️';
   if(type.includes('pdf')) return '📄';
-  if(type.includes('word') || type.includes('document')) return '📝';
-  if(type.includes('sheet') || type.includes('excel')) return '📊';
-  if(type.includes('presentation') || type.includes('powerpoint')) return '📑';
+  if(type.includes('word')||type.includes('document')) return '📝';
+  if(type.includes('sheet')||type.includes('excel')) return '📊';
+  if(type.includes('presentation')||type.includes('powerpoint')) return '📑';
   if(type.includes('video')) return '🎬';
   if(type.includes('audio')) return '🎵';
-  if(type.includes('zip') || type.includes('rar')) return '🗜️';
+  if(type.includes('zip')||type.includes('rar')) return '🗜️';
   return '📎';
 }
 function fmtSize(b){ if(!b)return''; if(b<1024)return b+'B'; if(b<1048576)return(b/1024).toFixed(1)+'KB'; return(b/1048576).toFixed(1)+'MB'; }
 
-// ── Save note ──
+// ── Save ──
 async function saveCurrentNote(){
   if(!nCurrentNote) return;
   const title = document.getElementById('noteTitleInput').value.trim()||'Sin título';
-  const content = document.getElementById('noteContentArea').value;
+  const noteContent = document.getElementById('noteContentArea').value;
   const now = Date.now();
   const msg = document.getElementById('noteSavedMsg');
   msg.style.color='var(--txt3)'; msg.textContent='Guardando...';
-  await sbNotePatch('note_items','id',nCurrentNote.id,{title,content,updated_at:now});
-  nCurrentNote.title=title; nCurrentNote.content=content; nCurrentNote.updated_at=now;
-  nNotes = nNotes.map(n=>n.id===nCurrentNote.id?{...n,title,content,updated_at:now}:n);
+  await sbNotePatch('note_items','id',nCurrentNote.id,{title,content:noteContent,updated_at:now});
+  nCurrentNote={...nCurrentNote,title,content:noteContent,updated_at:now};
+  nNotes = nNotes.map(n=>n.id===nCurrentNote.id?nCurrentNote:n);
+  const d=new Date(now);
+  document.getElementById('noteMetaDate').textContent=d.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
   msg.style.color='var(--green)'; msg.textContent='✅ Guardado';
-  setTimeout(()=>{ msg.style.color='var(--txt3)'; msg.textContent=''; },2000);
+  setTimeout(()=>{msg.style.color='var(--txt3)';msg.textContent='';},2000);
   renderNotesSidebar();
 }
 
 // ── Change folder ──
 async function changeNoteFolder(){
   if(!nCurrentNote) return;
-  const fid = document.getElementById('noteFolderSelect').value || null;
+  const fid = document.getElementById('noteFolderSelect').value||null;
   await sbNotePatch('note_items','id',nCurrentNote.id,{folder_id:fid});
-  nCurrentNote.folder_id=fid;
-  nNotes = nNotes.map(n=>n.id===nCurrentNote.id?{...n,folder_id:fid}:n);
+  nCurrentNote={...nCurrentNote,folder_id:fid};
+  nNotes=nNotes.map(n=>n.id===nCurrentNote.id?nCurrentNote:n);
   renderNotesSidebar();
 }
 
 // ── New note ──
 async function openNewNote(){
-  const now=Date.now();
-  const id=uid();
-  await sbNotePost('note_items',{id,user_id:CU.id,folder_id:null,title:'Nueva nota',content:'',created_at:now,updated_at:now});
-  await loadNotes();
+  if(!CU) return;
+  const now=Date.now(); const id=uid();
+  await sbNotePost('note_items',{id,user_id:CU.id,folder_id:nCurrentFolder||null,title:'Nueva nota',content:'',created_at:now,updated_at:now});
+  nNotes=[{id,user_id:CU.id,folder_id:nCurrentFolder||null,title:'Nueva nota',content:'',created_at:now,updated_at:now},...nNotes];
+  renderNotesSidebar();
   openNote(id);
+  setTimeout(()=>document.getElementById('noteTitleInput').focus(),100);
 }
 
 // ── New folder ──
 async function openNewFolder(){
   const name=prompt('Nombre de la carpeta:');
-  if(!name||!name.trim())return;
-  const id=uid();const now=Date.now();
+  if(!name||!name.trim()) return;
+  const id=uid(); const now=Date.now();
   await sbNotePost('note_folders',{id,user_id:CU.id,name:name.trim(),created_at:now});
-  await loadNotes();
+  nFolders=[...nFolders,{id,user_id:CU.id,name:name.trim(),created_at:now}];
+  nCurrentFolder=id;
+  renderNotesSidebar();
 }
 
 // ── Rename folder ──
 async function renameFolderPrompt(fid){
-  const f=nFolders.find(x=>x.id===fid);if(!f)return;
+  const f=nFolders.find(x=>x.id===fid); if(!f) return;
   const name=prompt('Nuevo nombre:',f.name);
-  if(!name||!name.trim())return;
+  if(!name||!name.trim()) return;
   await sbNotePatch('note_folders','id',fid,{name:name.trim()});
-  await loadNotes();
+  nFolders=nFolders.map(x=>x.id===fid?{...x,name:name.trim()}:x);
+  renderNotesSidebar();
 }
 
 // ── Delete folder ──
 async function deleteFolderConfirm(fid){
-  const f=nFolders.find(x=>x.id===fid);if(!f)return;
-  if(!confirm(`¿Eliminar carpeta "${f.name}"? Las notas dentro quedarán sin carpeta.`))return;
-  // move notes to no folder
-  await sbNotePatch('note_folders','id',fid,{});
-  // Actually delete
+  const f=nFolders.find(x=>x.id===fid); if(!f) return;
+  if(!confirm(`¿Eliminar carpeta "${f.name}"? Las notas dentro quedarán sin carpeta.`)) return;
   await sbNoteDelete('note_folders','id',fid);
-  if(nCurrentNote&&nCurrentNote.folder_id===fid){ nCurrentNote.folder_id=null; }
-  await loadNotes();
+  nFolders=nFolders.filter(x=>x.id!==fid);
+  nNotes=nNotes.map(n=>n.folder_id===fid?{...n,folder_id:null}:n);
+  if(nCurrentFolder===fid) nCurrentFolder=null;
+  if(nCurrentNote&&nCurrentNote.folder_id===fid) nCurrentNote={...nCurrentNote,folder_id:null};
+  renderNotesSidebar();
 }
 
-// ── Duplicate note ──
+// ── Note context menu ──
+function showNoteMenu(){
+  document.getElementById('noteMenu').style.display='flex';
+  document.getElementById('noteMenuOverlay').style.display='block';
+}
+function hideNoteMenu(){
+  document.getElementById('noteMenu').style.display='none';
+  document.getElementById('noteMenuOverlay').style.display='none';
+}
+
+// ── Duplicate ──
 async function duplicateNote(){
-  if(!nCurrentNote)return;
+  if(!nCurrentNote) return;
   const now=Date.now(); const id=uid();
   await sbNotePost('note_items',{id,user_id:CU.id,folder_id:nCurrentNote.folder_id,title:nCurrentNote.title+' (copia)',content:nCurrentNote.content,created_at:now,updated_at:now});
-  await loadNotes();
+  nNotes=[{id,user_id:CU.id,folder_id:nCurrentNote.folder_id,title:nCurrentNote.title+' (copia)',content:nCurrentNote.content,created_at:now,updated_at:now},...nNotes];
+  renderNotesSidebar();
   openNote(id);
+}
+
+// ── Move to folder ──
+function moveNoteToFolder(){
+  if(!nCurrentNote) return;
+  document.getElementById('noteFolderSelect').focus();
 }
 
 // ── Delete note ──
 async function deleteCurrentNote(){
-  if(!nCurrentNote)return;
-  if(!confirm(`¿Eliminar la nota "${nCurrentNote.title}"?`))return;
+  if(!nCurrentNote) return;
+  if(!confirm(`¿Eliminar la nota "${nCurrentNote.title||'Sin título'}"?`)) return;
   await sbNoteDelete('note_items','id',nCurrentNote.id);
-  nCurrentNote=null;
+  nNotes=nNotes.filter(n=>n.id!==nCurrentNote.id);
+  nCurrentNote=null; nAttachments=[];
   document.getElementById('notesEmpty').style.display='flex';
   document.getElementById('notesEditorInner').style.display='none';
-  await loadNotes();
+  renderNotesSidebar();
+  if(window.innerWidth<=768) notesGoBack();
 }
 
 // ── Upload attachments ──
 async function uploadAttachments(input){
-  if(!nCurrentNote||!input.files.length)return;
+  if(!nCurrentNote||!input.files.length) return;
   const msg=document.getElementById('noteSavedMsg');
-  msg.style.color='var(--txt3)';msg.textContent='Subiendo...';
+  msg.style.color='var(--txt3)'; msg.textContent=`Subiendo ${input.files.length} archivo(s)...`;
   for(const file of input.files){
     const path=`${CU.id}/${nCurrentNote.id}/${uid()}_${file.name}`;
-    const uploadRes = await fetch(`${SUPA_URL}/storage/v1/object/notes-files/${path}`,{
+    const uploadRes=await fetch(`${SUPA_URL}/storage/v1/object/notes-files/${path}`,{
       method:'POST',
       headers:{'Authorization':'Bearer '+SUPA_KEY,'Content-Type':file.type,'x-upsert':'true'},
       body:file
     });
     if(uploadRes.ok){
       const url=`${SUPA_URL}/storage/v1/object/public/notes-files/${path}`;
-      const id=uid();const now=Date.now();
+      const id=uid(); const now=Date.now();
       await sbNotePost('note_attachments',{id,note_id:nCurrentNote.id,user_id:CU.id,name:file.name,url,type:file.type,size:file.size,created_at:now});
       nAttachments.push({id,note_id:nCurrentNote.id,user_id:CU.id,name:file.name,url,type:file.type,size:file.size,created_at:now});
     }
   }
   input.value='';
   renderAttachList();
-  msg.style.color='var(--green)';msg.textContent='✅ Archivos subidos';
-  setTimeout(()=>{msg.textContent='';},2000);
+  // Auto-open attach panel
+  const panel=document.getElementById('attachPanel');
+  if(!panel.classList.contains('open')) toggleAttachPanel();
+  msg.style.color='var(--green)'; msg.textContent='✅ Archivos subidos';
+  setTimeout(()=>{msg.textContent='';},2500);
 }
 
 // ── Delete attachment ──
 async function deleteAttachment(aid){
-  if(!confirm('¿Eliminar este archivo?'))return;
+  if(!confirm('¿Eliminar este archivo?')) return;
   await sbNoteDelete('note_attachments','id',aid);
   nAttachments=nAttachments.filter(a=>a.id!==aid);
   renderAttachList();
