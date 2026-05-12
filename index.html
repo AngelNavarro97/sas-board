@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>SAS · Task Board</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -231,6 +231,9 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
 @keyframes pbg{0%,100%{background:rgba(255,68,85,.12)}50%{background:rgba(255,68,85,.22)}}
 @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
 ::-webkit-scrollbar{width:4px;height:4px}
+@media (max-width: 768px) {
+  .fi,.fs,.fta{font-size:16px !important}
+}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:10px}
 
@@ -396,7 +399,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
       <div class="notif-list" id="notifList"></div>
     </div>
     <div class="view" id="viewUsers">
-      <div class="sh"><div class="st">GESTIÓN <span>DE USUARIOS</span></div><button class="btn-p" onclick="openAddUser()">+ Añadir usuario</button></div>
+      <div class="sh"><div class="st">GESTIÓN <span>DE USUARIOS</span></div><button class="btn-p" id="btnAddUser" onclick="openAddUser()">+ Añadir usuario</button></div>
       <div class="srow" id="uStats"></div>
       <div id="usersWrap" style="display:flex;flex-direction:column;gap:10px;margin-top:4px"></div>
     </div>
@@ -440,7 +443,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
         </div>
         <input type="hidden" id="tPri" value="3"/>
       </div>
-      <div class="fg">
+      <div class="fg" id="statusCatRow">
         <div class="ff"><label class="fl">Estado</label>
           <select class="fs" id="tStat"><option value="todo">Por hacer</option><option value="inprogress">En progreso</option><option value="review">Revisión</option><option value="done">Completada</option></select>
         </div>
@@ -930,6 +933,7 @@ function openAddTask(status='todo'){
   document.getElementById('tCat').value='general';
   document.getElementById('pendingNote').style.display=isAdmin?'none':'block';
   document.getElementById('assignRow').style.display=isAdmin?'flex':'none';
+  document.getElementById('statusCatRow').style.display=isAdmin?'grid':'none';
   selPri(3);fillAss(isAdmin?null:CU.id);op('mTask');
 }
 function fillAss(sel){
@@ -1057,6 +1061,8 @@ function editTask(id){
   document.getElementById('tCat').value=t.category;
   document.getElementById('pendingNote').style.display='none';
   document.getElementById('assignRow').style.display=isAdmin?'flex':'none';
+  // Non-admins can't change status or category
+  document.getElementById('statusCatRow').style.display=isAdmin?'grid':'none';
   selPri(t.priority||3);fillAss(t.assignee);
   cl('mDetail');op('mTask');
 }
