@@ -1462,8 +1462,7 @@ function renderNotesSidebar(){
 
 function noteRowHTML(n){
   const active = nCurrentNote && nCurrentNote.id===n.id;
-  const preview = n.content ? n.content.replace(/
-/g,' ').substring(0,40) : 'Sin contenido';
+  const preview = n.content ? n.content.split('\n').join(' ').substring(0,40) : 'Sin contenido';
   const d = new Date(n.updated_at);
   const dateStr = d.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
   return `<div class="notes-row ${active?'active':''}" onclick="openNote('${n.id}')">
