@@ -895,7 +895,8 @@ function renderBoard(){
   const wrap=document.getElementById('boardWrap');
   const ts=visibleTasks();
   const isAdmin=CU.id===ADMIN_ID;
-  document.getElementById('btnAt').style.display=isAdmin?'':'none';
+  document.getElementById('btnAt').style.display='';
+  document.getElementById('btnAt').textContent=isAdmin?'+ Nueva tarea':'+ Proponer tarea';
   renderPriBar();
   wrap.innerHTML='';
   const pending=Object.values(tasks).filter(t=>t.status==='pending_approval'&&t.created_by===CU.id);
@@ -943,7 +944,6 @@ function selPri(v){
 //  TASK MODAL
 // ═══════════════════════════════════════════════
 function openAddTask(status='todo'){
-  if(CU.id!==ADMIN_ID)return;
   ET=null;const isAdmin=CU.id===ADMIN_ID;
   document.getElementById('mTaskT').textContent=isAdmin?'NUEVA TAREA':'PROPONER TAREA';
   document.getElementById('btnSaveTask').textContent=isAdmin?'Guardar tarea':'Enviar a aprobación';
@@ -968,7 +968,6 @@ function fillAss(sel){
   });
 }
 async function saveTask(){
-  if(CU.id!==ADMIN_ID)return;
   const name=document.getElementById('tName').value.trim();
   if(!name)return alert('El título es obligatorio');
   const now=Date.now();const isAdmin=CU.id===ADMIN_ID;
