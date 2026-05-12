@@ -249,7 +249,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
   .topbar{padding:0 12px;gap:4px;position:relative}
   #topSep{display:none}
   #navMenuBtn{display:flex !important;align-items:center;justify-content:center}
-  #navBoard,#navEvents,#navHistory,#navAppr,#navNotif,#navUsers,#navAdmin{display:none !important}
+  #navHistory,#navAppr,#navNotif,#navUsers,#navAdmin,#navBoard,#navEvents,#topSep{display:none !important}
   #mobileNav{display:none;position:fixed;top:52px;left:0;right:0;background:var(--s1);border-bottom:1px solid var(--b1);z-index:999;flex-direction:column;padding:8px;gap:2px}
   #mobileNav.open{display:flex}
   #mobileNav .nb{display:flex !important;padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
@@ -370,7 +370,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
     <button class="nb gold" id="mnUsers" style="display:none" onclick="swMobile('users','mnUsers')">👥 Usuarios</button>
     <button class="nb gold" id="mnAdmin" style="display:none" onclick="swMobile('admin','mnAdmin')">⚙️ Admin</button>
   </div>
-    <div class="main">
+  <div class="main">
     <div class="view active" id="viewBoard">
       <div class="sh">
         <div class="st">TABLERO <span>DE TAREAS</span></div>
@@ -783,9 +783,7 @@ async function doLogin(){
   av.textContent=ini(user);av.style.background=user.color+'22';av.style.color=user.color;
   document.getElementById('topName').textContent=user.name+' '+user.surname;
   const isAdmin=user.id===ADMIN_ID;
-  // Desktop nav — always show Tablero + Eventos, admin-only for the rest
-  document.getElementById('navBoard').style.display='';
-  document.getElementById('navEvents').style.display='';
+  // Desktop nav — admin-only buttons visibility
   document.getElementById('navAppr').style.display=isAdmin?'':'none';
   document.getElementById('navNotif').style.display=isAdmin?'':'none';
   document.getElementById('navUsers').style.display=isAdmin?'':'none';
