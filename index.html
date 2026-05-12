@@ -254,7 +254,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
   #navHistory,#navAppr,#navNotif,#navUsers,#navAdmin,#navBoard,#navEvents,#topSep{display:none !important}
   #mobileNav{display:none;position:fixed;top:52px;left:0;right:0;background:var(--s1);border-bottom:1px solid var(--b1);z-index:999;flex-direction:column;padding:8px;gap:2px}
   #mobileNav.open{display:flex}
-  #mnBoard,#mnEvents{display:flex !important;padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
+  #mnBoard,#mnEvents,#mnNotes{display:flex !important;padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
   #mobileNav .nb{padding:11px 14px;border-radius:8px;font-size:13px;text-align:left}
   .uname{display:none}
   .uchip{padding:4px 6px}
@@ -348,6 +348,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
     <!-- DESKTOP NAV BUTTONS -->
     <button class="nb active" id="navBoard" onclick="sw('board',this)">📋 Tablero</button>
     <button class="nb" id="navEvents" onclick="sw('events',this)">📅 Eventos</button>
+    <button class="nb" id="navNotes" onclick="sw('notes',this)">📝 Notas</button>
     <button class="nb" id="navHistory" style="display:none" onclick="sw('history',this)">🕐 Historial</button>
     <button class="nb" id="navAppr" style="display:none" onclick="sw('approval',this)">⏳ Aprobaciones</button>
     <button class="nb" id="navNotif" style="display:none" onclick="sw('notifications',this)">✅ Completadas</button>
@@ -367,6 +368,7 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
   <div id="mobileNav">
     <button class="nb" id="mnBoard" onclick="swMobile('board','mnBoard')">📋 Tablero</button>
     <button class="nb" id="mnEvents" onclick="swMobile('events','mnEvents')">📅 Eventos</button>
+    <button class="nb" id="mnNotes" onclick="swMobile('notes','mnNotes')">📝 Notas</button>
     <button class="nb" id="mnHistory" style="display:none" onclick="swMobile('history','mnHistory')">🕐 Historial</button>
     <button class="nb" id="mnAppr" style="display:none" onclick="swMobile('approval','mnAppr')">⏳ Aprobaciones</button>
     <button class="nb" id="mnNotif" style="display:none" onclick="swMobile('notifications','mnNotif')">✅ Completadas</button>
@@ -417,6 +419,16 @@ body::before{content:'';position:fixed;inset:0;opacity:.022;pointer-events:none;
         <div style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:15px">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--gold2);margin-bottom:10px">ALERTAS ACTIVAS</div>
           <div id="aAlerts"></div>
+        </div>
+      </div>
+    </div>
+    <div class="view" id="viewNotes">
+      <div class="sh"><div class="st">MIS <span>NOTAS</span></div><span style="font-size:12px;color:var(--txt3)">Solo tú puedes ver esto</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+        <textarea id="notesArea" class="fta" placeholder="Escribe aquí tus notas, ideas, recordatorios..." style="flex:1;min-height:300px;font-size:14px;line-height:1.7;resize:none;background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px;color:var(--txt);font-family:'DM Sans',sans-serif"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div id="notesSavedMsg" style="font-size:12px;color:var(--txt3)"></div>
+          <button class="btn-p" onclick="saveNotes()">💾 Guardar notas</button>
         </div>
       </div>
     </div>
@@ -723,6 +735,7 @@ function rerender(){
   if(v==='viewApproval')renderApproval();
   if(v==='viewNotifications')renderNotifications();
   if(v==='viewHistory')renderHistory();
+  if(v==='viewNotes')loadNotes();
 }
 function updateNavBadges(){
   if(CU?.id===ADMIN_ID){
@@ -804,6 +817,8 @@ async function doLogin(){
 }
 function doLogout(){
   CU=null;
+  notesLoaded=false;
+  document.getElementById('notesArea').value='';
   document.getElementById('app').style.display='none';
   document.getElementById('loginEmail').value='';
   document.getElementById('loginPass').value='';
@@ -817,7 +832,7 @@ function toggleMobileNav(){
 function swMobile(v, btnId){
   // update desktop nav active state
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
-  const desktopMap={board:'navBoard',events:'navEvents',history:'navHistory',approval:'navAppr',notifications:'navNotif',users:'navUsers',admin:'navAdmin'};
+  const desktopMap={board:'navBoard',events:'navEvents',notes:'navNotes',history:'navHistory',approval:'navAppr',notifications:'navNotif',users:'navUsers',admin:'navAdmin'};
   const deskBtn=document.getElementById(desktopMap[v]);
   if(deskBtn)deskBtn.classList.add('active');
   document.getElementById(btnId).classList.add('active');
@@ -1325,6 +1340,62 @@ function renderAdmin(){
     ?al.map(a=>{const u=gU(a.task.assignee);return`<div style="padding:9px 11px;border-radius:7px;background:${a.lv===2?'rgba(255,68,85,.07)':'rgba(255,159,67,.07)'};border:1px solid ${a.lv===2?'rgba(255,68,85,.18)':'rgba(255,159,67,.14)'};margin-bottom:4px"><div style="font-size:12px;font-weight:500;margin-bottom:2px">${a.task.title}</div><div style="font-size:11px;color:var(--txt3)">${u?u.name+' '+u.surname:'Sin asignar'} · <span style="color:${a.lv===2?'var(--red)':'var(--orange)'}">${a.days}d</span></div></div>`;}).join('')
     :'<div class="empty" style="padding:22px"><div class="ei">✅</div><p>Sin alertas</p></div>';
 }
+
+// ═══════════════════════════════════════════════
+//  NOTES
+// ═══════════════════════════════════════════════
+let notesLoaded = false;
+async function loadNotes(){
+  if(!CU)return;
+  const area = document.getElementById('notesArea');
+  const msg = document.getElementById('notesSavedMsg');
+  if(!notesLoaded){
+    msg.textContent = 'Cargando...';
+    try {
+      const res = await sbGet('notes', `user_id=eq.${CU.id}&select=content,updated_at`);
+      if(res && res.length > 0){
+        area.value = res[0].content || '';
+        const d = new Date(res[0].updated_at);
+        msg.textContent = `Última edición: ${d.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})} ${d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}`;
+      } else {
+        area.value = '';
+        msg.textContent = 'Sin notas guardadas aún';
+      }
+      notesLoaded = true;
+    } catch(e){ msg.textContent = 'Error al cargar'; }
+  }
+}
+async function saveNotes(){
+  if(!CU)return;
+  const content = document.getElementById('notesArea').value;
+  const msg = document.getElementById('notesSavedMsg');
+  const now = Date.now();
+  msg.textContent = 'Guardando...';
+  try {
+    // upsert
+    const existing = await sbGet('notes', `user_id=eq.${CU.id}&select=user_id`);
+    if(existing && existing.length > 0){
+      await sbPatch('notes', CU.id, {content, updated_at: now});
+    } else {
+      await fetch(`${SUPA_URL}/rest/v1/notes`, {
+        method:'POST',
+        headers:{...HEADERS,'Prefer':'resolution=merge-duplicates'},
+        body: JSON.stringify({user_id: CU.id, content, updated_at: now})
+      });
+    }
+    const d = new Date(now);
+    msg.style.color = 'var(--green)';
+    msg.textContent = `✅ Guardado — ${d.toLocaleDateString('es-ES',{day:'2-digit',month:'short'})} ${d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}`;
+    setTimeout(()=>{ msg.style.color='var(--txt3)'; }, 3000);
+  } catch(e){ msg.textContent = 'Error al guardar'; }
+}
+// Auto-save on Ctrl+S
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey||e.metaKey) && e.key==='s'){
+    const v = activeView();
+    if(v==='viewNotes'){ e.preventDefault(); saveNotes(); }
+  }
+});
 
 // ═══════════════════════════════════════════════
 //  BOOT
